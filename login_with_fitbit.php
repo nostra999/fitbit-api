@@ -61,6 +61,12 @@
 				$success = $client->CallAPI(
 					"https://api.fitbit.com/1/user/-/sleep/date/$yesterday.json", 
 					'GET', array(), array('FailOnAccessError'=>true), $sleep);	
+					
+				
+				///1/user/-/foods/log/date/	
+				$success = $client->CallAPI(
+					"https://api.fitbit.com/1/user/-/foods/log/date/$yesterday.json", 
+					'GET', array(), array('FailOnAccessError'=>true), $food);						
 			}
 		}
 		$success = $client->Finalize($success);
@@ -73,7 +79,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>Fitbit OAuth client results</title>
+<title>Fitbit Connector</title>
 </head>
 <body>
 <?php
@@ -82,6 +88,7 @@
 		echo '<pre>', HtmlSpecialChars(print_r($user, 1)), '</pre>';
 		echo '<pre>', HtmlSpecialChars(print_r($activity, 1)), '</pre>';
 		echo '<pre>', HtmlSpecialChars(print_r($sleep, 1)), '</pre>';
+		echo '<pre>', HtmlSpecialChars(print_r($food, 1)), '</pre>';
 		echo "<p>For Reference Keys: Token: ".$client->access_token." Secret: ".$client->access_token_secret."</p>";
 		
 		$link = mysql_connect('localhost', 'un', 'pw');
@@ -93,7 +100,8 @@
 		$links = mysql_select_db("db", $link);
 		$array = json_encode($activity);
 		$sleep = json_encode($sleep);
-		echo $data = "UPDATE fitbit SET value='".$array."', sleep='$sleep' WHERE id='1'";
+		$food = json_encode($food);
+		echo $data = "UPDATE fitbit SET value='".$array."', sleep='$sleep', food='$food' WHERE id='1'";
 		$query = mysql_query($data);
 		echo mysql_affected_rows();
 		if (!$query) {
